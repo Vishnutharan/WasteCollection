@@ -1,0 +1,17 @@
+<div class="app-container">
+    <div class="app-sidebar">
+        <app-sidebar></app-sidebar>
+    </div>
+    <div class="app-content">
+        <div class="topbar">
+            <h2>Dashboard</h2> <!-- Should be dynamic -->
+            <div class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+        </div>
+        <div class="content-scroll">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

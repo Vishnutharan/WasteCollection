@@ -1,0 +1,93 @@
+<div class="requests-container">
+    <div class="header-actions">
+        <h2>Waste Collection Requests</h2>
+        <button class="btn btn-primary" (click)="openModal()" *ngIf="user.role === 'Citizen'">
+            <i class="fas fa-plus"></i> New Request
+        </button>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th *ngIf="user.role !== 'Citizen'">Citizen</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let req of requests">
+                    <td>#{{ req.id }}</td>
+                    <td><span class="badge type">{{ req.requestType }}</span></td>
+                    <td>{{ req.location }}</td>
+                    <td>
+                        <span class="badge status" [ngClass]="req.status.toLowerCase()">{{ req.status }}</span>
+                    </td>
+                    <td>{{ req.requestedDate | date:'mediumDate' }}</td>
+                    <td *ngIf="user.role !== 'Citizen'">{{ req.citizen?.fullName }}</td>
+                    <td>
+                        <button class="btn-icon" *ngIf="canApprove() && req.status === 'Pending'"
+                            (click)="updateStatus(req.id, 'Approved')" title="Approve">
+                            <i class="fas fa-check text-success"></i>
+                        </button>
+                        <button class="btn-icon" *ngIf="canApprove() && req.status === 'Pending'"
+                            (click)="updateStatus(req.id, 'Rejected')" title="Reject">
+                            <i class="fas fa-times text-danger"></i>
+                        </button>
+                        <button class="btn-icon" *ngIf="user.role === 'Collector' && req.status === 'Approved'"
+                            (click)="updateStatus(req.id, 'Completed')" title="Complete">
+                            <i class="fas fa-check-double text-success"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="requests.length === 0">
+                    <td colspan="7" class="text-center">No requests found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>New Request</h3>
+            <button class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="requestForm" (ngSubmit)="submitRequest()">
+                <div class="form-group">
+                    <label>Waste Type</label>
+                    <select formControlName="requestType">
+                        <option value="Plastic">Plastic</option>
+                        <option value="Organic">Organic</option>
+                        <option value="Paper">Paper</option>
+                        <option value="E-Waste">E-Waste</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" formControlName="location" placeholder="Address">
+                </div>
+                <div class="form-group">
+                    <label>District</label>
+                    <input type="text" formControlName="district" placeholder="District">
+                </div>
+                <div class="form-group">
+                    <label>Municipality</label>
+                    <input type="text" formControlName="municipality" placeholder="Municipality">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea formControlName="notes" placeholder="Additional details..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="requestForm.invalid">Submit Request</button>
+            </form>
+        </div>
+    </div>
+</div>

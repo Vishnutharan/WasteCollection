@@ -1,0 +1,65 @@
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Welcome back, {{ user?.fullName }}!</h1>
+        <p>Here's what's happening with waste management in your area.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="icon blue">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="info">
+                <h3>{{ stats.totalRequests }}</h3>
+                <p>Total Requests</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon yellow">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="info">
+                <h3>{{ stats.pendingRequests }}</h3>
+                <p>Pending Pickup</p>
+            </div>
+        </div>
+
+        <div class="stat-card" *ngIf="user?.role !== 'Citizen'">
+            <div class="icon purple">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="info">
+                <h3>{{ stats.activeRoutes }}</h3>
+                <p>Active Routes</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon green">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="info">
+                <h3>{{ stats.completedRequests }}</h3>
+                <p>Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-list">
+            <div class="activity-item" *ngFor="let activity of recentActivities">
+                <div class="dot"></div>
+                <div class="content">
+                    <h4>{{ activity.action }}</h4>
+                    <p>{{ activity.details }}</p>
+                </div>
+                <span class="time">{{ activity.time }}</span>
+            </div>
+            <div class="activity-item" *ngIf="recentActivities.length === 0">
+                <p>No recent activities found.</p>
+            </div>
+        </div>
+    </div>
+</div>

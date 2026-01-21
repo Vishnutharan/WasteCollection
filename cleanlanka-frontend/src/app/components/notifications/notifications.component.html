@@ -1,0 +1,25 @@
+<div class="page-container">
+    <h2>Notifications</h2>
+
+    <div class="notifications-list">
+        <div class="notification-item" *ngFor="let notification of notifications" [class.unread]="!notification.isRead">
+            <div class="icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="content">
+                <p class="message">{{ notification.message }}</p>
+                <span class="time">{{ notification.createdAt | date:'short' }}</span>
+            </div>
+            <div class="actions">
+                <button class="btn-icon" *ngIf="!notification.isRead" (click)="markAsRead(notification.id)">
+                    <i class="fas fa-check-circle" title="Mark as Read"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="notifications.length === 0">
+            <i class="far fa-bell-slash"></i>
+            <p>No new notifications</p>
+        </div>
+    </div>
+</div>

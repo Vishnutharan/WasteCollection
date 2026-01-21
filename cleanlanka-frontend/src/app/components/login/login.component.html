@@ -1,0 +1,45 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="header">
+      <i class="fas fa-recycle logo-icon"></i>
+      <h1>CleanLanka</h1>
+      <p>Waste Management System</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" formControlName="email" placeholder="Enter your email" [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" formControlName="password" placeholder="Enter your password">
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid || loading" class="btn-login">
+        <span *ngIf="!loading">Login</span>
+        <span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i> Logging in...</span>
+      </button>
+    </form>
+
+    <div class="demo-logins">
+      <p>Demo Accounts:</p>
+      <div class="tags">
+        <span (click)="demoLogin('Admin')" class="tag admin">Admin</span>
+        <span (click)="demoLogin('Citizen')" class="tag citizen">Citizen</span>
+        <span (click)="demoLogin('Collector')" class="tag collector">Collector</span>
+      </div>
+    </div>
+  </div>
+</div>

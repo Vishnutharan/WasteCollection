@@ -1,0 +1,66 @@
+<div class="page-container">
+    <div class="header-actions">
+        <h2>Collection Routes</h2>
+        <button class="btn btn-primary" (click)="openModal()"
+            *ngIf="['Admin', 'MunicipalityOfficer'].includes(user.role)">
+            <i class="fas fa-route"></i> Create Route
+        </button>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Area / Route Name</th>
+                    <th>Schedule Date</th>
+                    <th>Vehicle</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let route of routes">
+                    <td>#{{ route.id }}</td>
+                    <td>{{ route.area }}</td>
+                    <td>{{ route.scheduledDate | date:'medium' }}</td>
+                    <td>{{ route.vehicle?.numberPlate || '-' }}</td>
+                    <td>
+                        <span class="badge status" [ngClass]="route.status.toLowerCase()">{{ route.status }}</span>
+                    </td>
+                    <td>
+                        <button class="btn-icon text-primary"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Plan New Route</h3>
+            <button class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="routeForm" (ngSubmit)="submitRoute()">
+                <div class="form-group">
+                    <label>Area / Description</label>
+                    <input type="text" formControlName="area" placeholder="e.g. Zone A Collection">
+                </div>
+                <div class="form-group">
+                    <label>Date & Time</label>
+                    <input type="datetime-local" formControlName="scheduledDate">
+                </div>
+                <div class="form-group">
+                    <label>Assign Vehicle</label>
+                    <select formControlName="vehicleId">
+                        <option *ngFor="let v of vehicles" [value]="v.id">{{ v.numberPlate }} ({{ v.type }})</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Route</button>
+            </form>
+        </div>
+    </div>
+</div>

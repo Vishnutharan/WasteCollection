@@ -1,0 +1,52 @@
+<div class="page-container">
+    <div class="header-actions">
+        <h2>Vehicle Fleet</h2>
+        <button class="btn btn-primary" (click)="openModal()" *ngIf="user.role !== 'Citizen'">
+            <i class="fas fa-truck-moving"></i> Add Vehicle
+        </button>
+    </div>
+
+    <div class="grid-container">
+        <div class="vehicle-card" *ngFor="let vehicle of vehicles">
+            <div class="icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="details">
+                <h3>{{ vehicle.numberPlate }}</h3>
+                <p class="type">{{ vehicle.type }}</p>
+                <p class="capacity">Capacity: {{ vehicle.capacity }} kg</p>
+                <span class="badge" [class.available]="true">Available</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Vehicle</h3>
+            <button class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="vehicleForm" (ngSubmit)="submitVehicle()">
+                <div class="form-group">
+                    <label>Number Plate</label>
+                    <input type="text" formControlName="numberPlate" placeholder="WP XXX-XXXX">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select formControlName="type">
+                        <option value="Truck">Garbage Truck</option>
+                        <option value="Van">Small Van</option>
+                        <option value="Compactor">Compactor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Capacity (kg)</label>
+                    <input type="number" formControlName="capacity">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Vehicle</button>
+            </form>
+        </div>
+    </div>
+</div>

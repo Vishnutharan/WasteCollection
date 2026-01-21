@@ -1,0 +1,34 @@
+<div class="sidebar-container">
+    <div class="logo-section">
+        <i class="fas fa-recycle"></i>
+        <span>CleanLanka</span>
+    </div>
+
+    <div class="user-info" *ngIf="user">
+        <div class="avatar">{{ user.fullName.charAt(0) }}</div>
+        <div class="details">
+            <span class="name">{{ user.fullName }}</span>
+            <span class="role">{{ user.role }}</span>
+        </div>
+    </div>
+
+    <nav class="nav-menu">
+        <ul>
+            <ng-container *ngFor="let item of menuItems">
+                <li *ngIf="hasRole(item.roles)">
+                    <a [routerLink]="item.route" routerLinkActive="active">
+                        <i [class]="item.icon"></i>
+                        <span>{{ item.label }}</span>
+                    </a>
+                </li>
+            </ng-container>
+        </ul>
+    </nav>
+
+    <div class="footer-actions">
+        <button (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </button>
+    </div>
+</div>

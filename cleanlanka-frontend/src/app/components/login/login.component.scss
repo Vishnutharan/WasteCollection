@@ -1,0 +1,158 @@
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.header {
+    margin-bottom: 30px;
+    color: #333;
+
+    .logo-icon {
+        font-size: 48px;
+        color: #27ae60;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    p {
+        margin: 5px 0 0;
+        color: #7f8c8d;
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #34495e;
+    }
+}
+
+.input-group {
+    position: relative;
+
+    i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #bdc3c7;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #dfe6e9;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+
+        &:focus {
+            border-color: #2ecc71;
+            outline: none;
+        }
+
+        &.error {
+            border-color: #e74c3c;
+        }
+    }
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+        background: #219150;
+    }
+
+    &:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+    }
+}
+
+.error-message {
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-size: 14px;
+    background: #fdeaea;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.demo-logins {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+
+    p {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-bottom: 10px;
+    }
+
+    .tags {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .tag {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+        color: white;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &.admin {
+            background: #34495e;
+        }
+
+        &.citizen {
+            background: #2980b9;
+        }
+
+        &.collector {
+            background: #e67e22;
+        }
+    }
+}
