@@ -146,3 +146,4 @@ D:\Angular\WasteCollection\cleanlanka-backend\obj\Debug\net8.0\refint\cleanlanka
 D:\Angular\WasteCollection\cleanlanka-backend\obj\Debug\net8.0\cleanlanka-backend.pdb
 D:\Angular\WasteCollection\cleanlanka-backend\obj\Debug\net8.0\cleanlanka-backend.genruntimeconfig.cache
 D:\Angular\WasteCollection\cleanlanka-backend\obj\Debug\net8.0\ref\cleanlanka-backend.dll
+D:\Angular\WasteCollection\cleanlanka-backend\obj\Debug\net8.0\cleanlanka-backend.sourcelink.json
