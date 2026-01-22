@@ -58,4 +58,23 @@ namespace CleanLanka.Backend.DTOs
         public DateTime RequestedDate { get; set; }
         public string CitizenName { get; set; } = string.Empty;
     }
+
+    public class RequestStatusUpdateDto
+    {
+        [Required]
+        public string Status { get; set; } = string.Empty;
+    }
+
+    public class ConfirmRequestDto
+    {
+        public string Status { get; set; } = "Confirmed";
+        public string? CollectorId { get; set; }
+        public string? Note { get; set; }
+    }
+
+    public class VehicleAssignmentDto
+    {
+        [Required]
+        public string CollectorId { get; set; } = string.Empty;
+    }
 }

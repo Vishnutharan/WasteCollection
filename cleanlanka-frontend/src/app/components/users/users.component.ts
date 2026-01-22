@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Component({
   selector: 'app-users',
@@ -17,7 +18,7 @@ export class UsersComponent implements OnInit {
   users: any[] = [];
   userForm: FormGroup;
   showModal = false;
-  apiUrl = 'http://localhost:5214/api/users';
+  apiUrl = `${API_BASE_URL}/users`;
 
   constructor() {
     this.userForm = this.fb.group({
@@ -66,5 +67,12 @@ export class UsersComponent implements OnInit {
     if(confirm('Are you sure?')) {
       this.http.delete(`${this.apiUrl}/${id}`).subscribe(() => this.loadUsers());
     }
+  }
+
+  approveCollector(id: string) {
+    this.http.put(`${this.apiUrl}/${id}/approve-collector`, {}).subscribe({
+      next: () => this.loadUsers(),
+      error: (err) => alert('Error approving collector')
+    });
   }
 }

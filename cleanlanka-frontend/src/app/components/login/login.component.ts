@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -11,12 +11,15 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   error = '';
+  success = '';
+  returnUrl = '';
   authService = inject(AuthService);
   router = inject(Router);
+  route = inject(ActivatedRoute);
 
   constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
@@ -25,18 +28,37 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      const registered = params.get('registered');
+      const email = params.get('email');
+      this.returnUrl = params.get('returnUrl') || '';
+
+      if (registered) {
+        this.success = 'Registration successful. Please sign in.';
+      }
+      if (email) {
+        this.loginForm.patchValue({ email });
+      }
+    });
+  }
+
   onSubmit() {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
     this.loading = true;
     this.error = '';
+    this.success = '';
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (user) => {
         this.loading = false;
-        if (user.role === 'Admin') this.router.navigate(['/dashboard']);
-        else if (user.role === 'Citizen') this.router.navigate(['/requests']);
-        else this.router.navigate(['/dashboard']);
+        const fallbackRoute = user.role === 'Citizen' ? '/requests' : '/dashboard';
+        const target = this.returnUrl || fallbackRoute;
+        this.router.navigate([target]);
       },
       error: (err) => {
         this.loading = false;

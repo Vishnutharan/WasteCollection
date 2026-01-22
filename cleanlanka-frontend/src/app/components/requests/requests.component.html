@@ -13,6 +13,7 @@
                     <th>ID</th>
                     <th>Type</th>
                     <th>Location</th>
+                    <th>Collector</th>
                     <th>Status</th>
                     <th>Date</th>
                     <th *ngIf="user.role !== 'Citizen'">Citizen</th>
@@ -24,21 +25,32 @@
                     <td>#{{ req.id }}</td>
                     <td><span class="badge type">{{ req.requestType }}</span></td>
                     <td>{{ req.location }}</td>
+                    <td>{{ req.assignedTo ? collectorName(req.assignedTo) : 'Unassigned' }}</td>
                     <td>
                         <span class="badge status" [ngClass]="req.status.toLowerCase()">{{ req.status }}</span>
                     </td>
                     <td>{{ req.requestedDate | date:'mediumDate' }}</td>
                     <td *ngIf="user.role !== 'Citizen'">{{ req.citizen?.fullName }}</td>
                     <td>
-                        <button class="btn-icon" *ngIf="canApprove() && req.status === 'Pending'"
-                            (click)="updateStatus(req.id, 'Approved')" title="Approve">
-                            <i class="fas fa-check text-success"></i>
-                        </button>
-                        <button class="btn-icon" *ngIf="canApprove() && req.status === 'Pending'"
-                            (click)="updateStatus(req.id, 'Rejected')" title="Reject">
-                            <i class="fas fa-times text-danger"></i>
-                        </button>
-                        <button class="btn-icon" *ngIf="user.role === 'Collector' && req.status === 'Approved'"
+                        <ng-container *ngIf="canApprove()">
+                            <div class="inline-controls" *ngIf="req.status === 'Pending' || req.status === 'Confirmed' || req.status === 'Assigned'">
+                                <select [(ngModel)]="req.assignedTo" name="collector-{{req.id}}" class="assign-select" [ngModelOptions]="{standalone: true}">
+                                    <option [ngValue]="''" disabled>Select collector</option>
+                                    <option *ngFor="let col of collectors" [ngValue]="col.id">{{ col.fullName }} ({{ col.zone || 'All' }})</option>
+                                </select>
+                                <button class="btn-icon"
+                                        [disabled]="!req.assignedTo && req.status === 'Assigned'"
+                                        (click)="confirmRequest(req.id, req.assignedTo || undefined)"
+                                        title="Confirm/Assign">
+                                    <i class="fas fa-share-square text-success"></i>
+                                </button>
+                                <span class="small text-muted" *ngIf="collectors.length === 0">No collectors available</span>
+                            </div>
+                            <button class="btn-icon" *ngIf="req.status === 'Pending'" (click)="updateStatus(req.id, 'Rejected')" title="Reject">
+                                <i class="fas fa-times text-danger"></i>
+                            </button>
+                        </ng-container>
+                        <button class="btn-icon" *ngIf="user.role === 'Collector' && (req.status === 'Assigned' || req.status === 'Confirmed') && req.assignedTo === user.id"
                             (click)="updateStatus(req.id, 'Completed')" title="Complete">
                             <i class="fas fa-check-double text-success"></i>
                         </button>
@@ -64,6 +76,7 @@
                 <div class="form-group">
                     <label>Waste Type</label>
                     <select formControlName="requestType">
+                        <option value="" disabled>Select type</option>
                         <option value="Plastic">Plastic</option>
                         <option value="Organic">Organic</option>
                         <option value="Paper">Paper</option>

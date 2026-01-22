@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Linq;
 using CleanLankaUser = CleanLanka.Backend.Models.User;
 
 namespace CleanLanka.Backend.Controllers
@@ -31,20 +32,31 @@ namespace CleanLanka.Backend.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
+                if (!string.Equals(user.Status, "Active", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Unauthorized(new { Message = "Account is not active. Please contact admin." });
+                }
+
                 var userRoles = await _userManager.GetRolesAsync(user);
+                var effectiveRole = userRoles.FirstOrDefault() ?? user.Role ?? "Citizen";
 
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName!),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim("Role", userRoles.FirstOrDefault() ?? "Citizen"),
+                    new Claim("Role", effectiveRole),
                     new Claim("Zone", user.Zone ?? "All")
                 };
 
                 foreach (var role in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                if (!userRoles.Any() && !string.IsNullOrWhiteSpace(effectiveRole))
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, effectiveRole));
                 }
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -68,9 +80,20 @@ namespace CleanLanka.Backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var allowedRoles = new[] { "Citizen", "Collector" };
+            var requestedRole = string.IsNullOrWhiteSpace(model.Role) ? "Citizen" : model.Role;
+            if (!allowedRoles.Contains(requestedRole, StringComparer.OrdinalIgnoreCase))
+                return BadRequest(new { Message = "Invalid role selected." });
+
             var userExists = await _userManager.FindByEmailAsync(model.Email);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
+                return Conflict(new { Status = "Error", Message = "User already exists!" });
+
+            var role = requestedRole;
+            var status = role == "Collector" ? "Pending" : "Active";
 
             CleanLankaUser user = new()
             {
@@ -78,16 +101,25 @@ namespace CleanLanka.Backend.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Email,
                 FullName = model.FullName,
-                Role = model.Role,
-                Zone = model.Zone
+                Role = role,
+                Zone = model.Zone,
+                Status = status
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return BadRequest(new
+                {
+                    Status = "Error",
+                    Message = "User creation failed! Please check user details and try again.",
+                    Errors = result.Errors.Select(e => e.Description)
+                });
 
-            await _userManager.AddToRoleAsync(user, model.Role);
+            if (role == "Citizen")
+            {
+                await _userManager.AddToRoleAsync(user, role);
+            }
 
-            return Ok(new { Status = "Success", Message = "User created successfully!" });
+            return Ok(new { Status = "Success", Message = role == "Collector" ? "Collector registered. Awaiting admin approval." : "User created successfully!" });
         }
     }
 }

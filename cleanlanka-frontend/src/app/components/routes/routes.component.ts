@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Component({
   selector: 'app-routes',
@@ -20,7 +21,7 @@ export class RoutesComponent implements OnInit {
   vehicles: any[] = [];
   routeForm: FormGroup;
   showModal = false;
-  apiUrl = 'http://localhost:5214/api/routes';
+  apiUrl = `${API_BASE_URL}/routes`;
   user = this.authService.getUser();
 
   constructor() {
@@ -45,7 +46,7 @@ export class RoutesComponent implements OnInit {
   }
 
   loadVehicles() {
-      this.http.get<any[]>('http://localhost:5214/api/vehicles').subscribe({
+      this.http.get<any[]>(`${API_BASE_URL}/vehicles`).subscribe({
           next: (data) => this.vehicles = data
       });
   }

@@ -26,6 +26,9 @@
                     <td>{{ user.zone || '-' }}</td>
                     <td><span class="badge status active">{{ user.status || 'Active' }}</span></td>
                     <td>
+                        <button class="btn-icon" *ngIf="user.role === 'Collector' && user.status !== 'Active'" (click)="approveCollector(user.id)" title="Approve Collector">
+                            <i class="fas fa-check"></i>
+                        </button>
                         <button class="btn-icon delete" (click)="deleteUser(user.id)">
                             <i class="fas fa-trash"></i>
                         </button>

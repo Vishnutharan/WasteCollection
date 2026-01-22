@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5214/api/auth'; // Adjust port as needed
+  private apiUrl = `${API_BASE_URL}/auth`;
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
 
@@ -16,6 +17,11 @@ export class AuthService {
     if (user) {
       this.userSubject.next(JSON.parse(user));
     }
+  }
+
+  register(payload: any): Observable<any> {
+    const body = { ...payload, role: payload.role ?? 'Citizen' };
+    return this.http.post<any>(`${this.apiUrl}/register`, body);
   }
 
   login(credentials: any): Observable<any> {

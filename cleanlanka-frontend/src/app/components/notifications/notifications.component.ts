@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Component({
   selector: 'app-notifications',
@@ -12,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 export class NotificationsComponent implements OnInit {
   http = inject(HttpClient);
   notifications: any[] = [];
-  apiUrl = 'http://localhost:5214/api/notifications';
+  apiUrl = `${API_BASE_URL}/notifications`;
 
   ngOnInit() {
     this.loadNotifications();

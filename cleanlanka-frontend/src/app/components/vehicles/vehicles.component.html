@@ -15,7 +15,16 @@
                 <h3>{{ vehicle.numberPlate }}</h3>
                 <p class="type">{{ vehicle.type }}</p>
                 <p class="capacity">Capacity: {{ vehicle.capacity }} kg</p>
+                <p class="capacity">Collector: {{ vehicle.driverId ? collectorName(vehicle.driverId) : 'Unassigned' }}</p>
                 <span class="badge" [class.available]="true">Available</span>
+
+                <div class="inline-controls" *ngIf="user.role !== 'Citizen'">
+                    <select [(ngModel)]="vehicle.driverId" name="assign-{{vehicle.id}}" class="assign-select" [ngModelOptions]="{standalone: true}">
+                        <option [ngValue]="''" disabled>Select collector</option>
+                        <option *ngFor="let col of collectors" [ngValue]="col.id">{{ col.fullName }} ({{ col.zone || 'All' }})</option>
+                    </select>
+                    <button class="btn btn-primary" [disabled]="!vehicle.driverId" (click)="assignCollector(vehicle)">Assign</button>
+                </div>
             </div>
         </div>
     </div>
@@ -44,6 +53,13 @@
                 <div class="form-group">
                     <label>Capacity (kg)</label>
                     <input type="number" formControlName="capacity">
+                </div>
+                <div class="form-group">
+                    <label>Default Collector</label>
+                    <select formControlName="driverId">
+                        <option value="">Unassigned</option>
+                        <option *ngFor="let col of collectors" [value]="col.id">{{ col.fullName }} ({{ col.zone || 'All' }})</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Add Vehicle</button>
             </form>

@@ -113,6 +113,34 @@
     border-radius: 4px;
 }
 
+.success-message {
+    color: #27ae60;
+    margin-bottom: 15px;
+    font-size: 14px;
+    background: #e6f8ee;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.field-error {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.auth-switch {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #7f8c8d;
+
+    a {
+        color: #27ae60;
+        font-weight: 600;
+        text-decoration: none;
+        margin-left: 6px;
+    }
+}
+
 .demo-logins {
     margin-top: 30px;
     border-top: 1px solid #eee;

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("cleanlanka-backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5abc5c06f2aa9b70aea3fc9ea860df2bfd2d725")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55519cd14fb04e25f367a522f00c76644dde025f")]
 [assembly: System.Reflection.AssemblyProductAttribute("cleanlanka-backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("cleanlanka-backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
